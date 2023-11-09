@@ -16,7 +16,10 @@
 // 
 // Date:
 //
+<<<<<<< HEAD
 //
+=======
+>>>>>>> upstream/main
 
 #include "image8bit.h"
 
