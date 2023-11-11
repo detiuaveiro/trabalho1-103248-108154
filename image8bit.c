@@ -10,8 +10,8 @@
 /// 2013, 2023
 
 // Student authors (fill in below):
-// NMec:  Name:
-// 
+// NMec:108154  Name:Tomás Correia de Sá dos Santos Alves
+// NMec:103248  Name:
 // 
 // 
 // Date:
@@ -210,15 +210,24 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
 /// Ensures: (*imgp)==NULL.
 /// Should never fail, and should preserve global errno/errCause.
 void ImageDestroy(Image* imgp) {
-  assert(imgp != NULL);
+    if (imgp == NULL || *imgp == NULL) {
+        return; // Nothing to do
+    }
 
-  if (*imgp != NULL) {
-    free((*imgp)->pixel);  // Free the pixel array
-    free(*imgp);           // Free the image structure
-    *imgp = NULL;           // Set the pointer to NULL
-  }
+    Image img = *imgp;
+
+    // Free memory for pixel values
+    for (int i = 0; i < img->height; i++) {
+        free(img->pixels[i]);
+    }
+    free(img->pixels);
+
+    // Free memory for image structure
+    free(img);
+
+    // Set imgp to NULL to indicate destruction
+    *imgp = NULL;
 }
-
 
 /// PGM file operations
 
