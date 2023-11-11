@@ -521,7 +521,40 @@ int ImageMatchSubImage(Image img1, int x, int y, Image img2) { ///
 int ImageLocateSubImage(Image img1, int* px, int* py, Image img2) { ///
   assert (img1 != NULL);
   assert (img2 != NULL);
-  // Insert your code here!
+
+   int width1 = ImageWidth(img1);
+    int height1 = ImageHeight(img1);
+    int width2 = ImageWidth(img2);
+    int height2 = ImageHeight(img2);
+
+    for (int y1 = 0; y1 <= height1 - height2; y1++) {
+        for (int x1 = 0; x1 <= width1 - width2; x1++) {
+            // Check if img2 matches the subimage of img1 at position (x1, y1)
+            int match = 1;
+            for (int y2 = 0; y2 < height2; y2++) {
+                for (int x2 = 0; x2 < width2; x2++) {
+                    if (ImageGetPixel(img1, x1 + x2, y1 + y2) != ImageGetPixel(img2, x2, y2)) {
+                        match = 0;
+                        break;
+                    }
+                }
+                if (!match) {
+                    break;
+                }
+            }
+
+            // If match is found, update position and return 1
+            if (match) {
+                *px = x1;
+                *py = y1;
+                return 1;
+            }
+        }
+    }
+
+    // If no match is found, leave position untouched and return 0
+    return 0;
+}
 }
 
 
@@ -532,6 +565,53 @@ int ImageLocateSubImage(Image img1, int* px, int* py, Image img2) { ///
 /// [x-dx, x+dx]x[y-dy, y+dy].
 /// The image is changed in-place.
 void ImageBlur(Image img, int dx, int dy) { ///
-  // Insert your code here!
+   if (img == NULL || dx < 0 || dy < 0) {
+        SetError(-1, "Invalid arguments in ImageBlur");
+        return;
+    }
+
+    int width = ImageWidth(img);
+    int height = ImageHeight(img);
+
+    Image tempImage = ImageCreate(width, height, ImageMaxval(img));
+    if (tempImage == NULL) {
+        // Handle error, ImageCreate failed
+        return;
+    }
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            // Calculate mean value in the neighborhood
+            int sum = 0;
+            int count = 0;
+            for (int j = -dy; j <= dy; j++) {
+                for (int i = -dx; i <= dx; i++) {
+                    int nx = x + i;
+                    int ny = y + j;
+
+                    if (ImageValidPos(img, nx, ny)) {
+                        sum += ImageGetPixel(img, nx, ny);
+                        count++;
+                    }
+                }
+            }
+
+            // Set the mean value in the temporary image
+            if (count > 0) {
+                int meanValue = sum / count;
+                ImageSetPixel(tempImage, x, y, meanValue);
+            }
+        }
+    }
+
+    // Copy the values from the temporary image back to the original image
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            ImageSetPixel(img, x, y, ImageGetPixel(tempImage, x, y));
+        }
+    }
+
+    // Destroy the temporary image
+    ImageDestroy(&tempImage);
 }
 
