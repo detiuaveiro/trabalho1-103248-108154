@@ -175,7 +175,33 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
   assert (width >= 0);
   assert (height >= 0);
   assert (0 < maxval && maxval <= PixMax);
-  // Insert your code here!
+  
+// Allocate memory for the image structure
+  Image img = (Image)malloc(sizeof(struct image));
+  if (img == NULL) {
+    errCause = "Memory allocation failed";
+    return NULL;
+  }
+
+  // Initialize the image fields
+  img->width = width;
+  img->height = height;
+  img->maxval = maxval;
+
+  // Allocate memory for the pixel array
+  img->pixel = (uint8*)malloc(width * height * sizeof(uint8));
+  if (img->pixel == NULL) {
+    errCause = "Memory allocation failed";
+    free(img);  // Clean up the allocated image structure
+    return NULL;
+  }
+
+  // Initialize the pixel array to zero (black)
+  for (int i = 0; i < width * height; i++) {
+    img->pixel[i] = 0;
+  }
+
+  return img;
 }
 
 /// Destroy the image pointed to by (*imgp).
@@ -183,9 +209,14 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
 /// If (*imgp)==NULL, no operation is performed.
 /// Ensures: (*imgp)==NULL.
 /// Should never fail, and should preserve global errno/errCause.
-void ImageDestroy(Image* imgp) { ///
-  assert (imgp != NULL);
-  // Insert your code here!
+void ImageDestroy(Image* imgp) {
+  assert(imgp != NULL);
+
+  if (*imgp != NULL) {
+    free((*imgp)->pixel);  // Free the pixel array
+    free(*imgp);           // Free the image structure
+    *imgp = NULL;           // Set the pointer to NULL
+  }
 }
 
 
