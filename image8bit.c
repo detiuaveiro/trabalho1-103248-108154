@@ -333,8 +333,29 @@ int ImageMaxval(Image img) { ///
 /// *max is set to the maximum.
 void ImageStats(Image img, uint8* min, uint8* max) { ///
   assert (img != NULL);
-  // Insert your code here!
+
+  int width = ImageWidth(img);
+  int height = ImageHeight(img);
+
+  // Initialize min and max with the first pixel value
+  *min = *max = ImageGetPixel(img, 0, 0);
+
+  // Iterate through all pixels to find min and max
+  for (int y = 0; y < height; y++) {
+    for (int x = 0; x < width; x++) {
+      uint8 pixelValue = ImageGetPixel(img, x, y);
+
+      // Update min and max values
+      if (pixelValue < *min) {
+        *min = pixelValue;
+      }
+      if (pixelValue > *max) {
+        *max = pixelValue;
+      }
+    }
+  }
 }
+
 
 /// Check if pixel position (x,y) is inside img.
 int ImageValidPos(Image img, int x, int y) { ///
@@ -345,7 +366,8 @@ int ImageValidPos(Image img, int x, int y) { ///
 /// Check if rectangular area (x,y,w,h) is completely inside img.
 int ImageValidRect(Image img, int x, int y, int w, int h) { ///
   assert (img != NULL);
-  // Insert your code here!
+  return ImageValidPos(img, x, y) &&
+         ImageValidPos(img, x + w - 1, y + h - 1);
 }
 
 /// Pixel get & set operations
