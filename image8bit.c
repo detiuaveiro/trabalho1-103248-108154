@@ -11,15 +11,11 @@
 
 // Student authors (fill in below):
 // NMec:108154  Name:Tomás Correia de Sá dos Santos Alves
-// NMec:103248  Name:
+// NMec:103248  Name:José Miguel Guardado Silva
 // 
 // 
 // Date:
 //
-<<<<<<< HEAD
-//
-=======
->>>>>>> upstream/main
 
 #include "image8bit.h"
 
@@ -218,9 +214,9 @@ void ImageDestroy(Image* imgp) {
 
     // Free memory for pixel values
     for (int i = 0; i < img->height; i++) {
-        free(img->pixels[i]);
+        free(img->pixel[i]);
     }
-    free(img->pixels);
+    free(img->pixel);
 
     // Free memory for image structure
     free(img);
@@ -674,7 +670,6 @@ int ImageLocateSubImage(Image img1, int* px, int* py, Image img2) { ///
     // If no match is found, leave position untouched and return 0
     return 0;
 }
-}
 
 
 /// Filtering
@@ -685,7 +680,7 @@ int ImageLocateSubImage(Image img1, int* px, int* py, Image img2) { ///
 /// The image is changed in-place.
 void ImageBlur(Image img, int dx, int dy) { ///
    if (img == NULL || dx < 0 || dy < 0) {
-        SetError(-1, "Invalid arguments in ImageBlur");
+        //SetError(-1, "Invalid arguments in ImageBlur");
         return;
     }
 
