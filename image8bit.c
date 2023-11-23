@@ -12,8 +12,7 @@
 // Student authors (fill in below):
 // NMec:108154  Name:Tomás Correia de Sá dos Santos Alves
 // NMec:103248  Name:José Miguel Guardado Silva
-// 
-// 
+//
 // Date:
 //
 
